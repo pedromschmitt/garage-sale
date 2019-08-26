@@ -1,11 +1,12 @@
 module Api
   module V1
     class ItemsController < ApplicationController
+      before_action :authorize_access_request!, except: [:show, :index]
       before_action :set_item, only: [:show, :update, :destroy]
 
       # GET /items
       def index
-        @items = Item.all
+        @items = current_user.items.all
 
         render json: @items
       end
@@ -17,7 +18,7 @@ module Api
 
       # POST /items
       def create
-        @item = Item.new(item_params)
+        @item = current_user.items.build(item_params)
 
         if @item.save
           render json: @item, status: :created, location: @item
@@ -43,7 +44,7 @@ module Api
       private
         # Use callbacks to share common setup or constraints between actions.
         def set_item
-          @item = Item.find(params[:id])
+          @item = current_user.items.find(params[:id])
         end
 
         # Only allow a trusted parameter "white list" through.
