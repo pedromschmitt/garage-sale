@@ -23,4 +23,5 @@
 
 class Item < ApplicationRecord
   belongs_to :category
+  enum status: %w[active sold]
 end
